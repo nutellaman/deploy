@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Controller {
 	
-	public static final double OBSFORCE = 0.05;
+	public static final double OBSFORCE = 10;
 	public static final double NODEFORCE = 30;
 	public static final double VELOCITY_CLIP = 5;
 	public static final double REDUCE = 0.95;
@@ -103,7 +103,7 @@ public class Controller {
 		return f;
 	}
 	
-	public Point2D.Double forceTo(Node target) {
+	public Point2D.Double forceTo(Node target, int t) {
 		
 		Point2D.Double f = new Point2D.Double(0,0);
 		
@@ -120,6 +120,8 @@ public class Controller {
 		
 		for (Obstacle o:mObs) {
 			Point2D.Double k = getForceFromObs(o,target);
+			k.x /= Math.log((double) t + 1);
+			k.y /= Math.log((double) t + 1);
 			f.x += k.x;
 			f.y += k.y;
 		}
@@ -162,30 +164,15 @@ public class Controller {
 					
 				}
 			}
-			/*
-			else {
-				if (n.x <= o.x && n.x >= o.x - 5) {
-					result.x = n.x;
-				}
-				if (n.x >= o.x + o.width && n.x <= o.x + o.width + 5) {
-					result.x = n.x;
-				}
-				if (n.y <= o.y && n.y >= o.y - 5) {
-					result.y = n.y;
-				}
-				if (n.y >= o.y + o.height && n.y <= o.y + o.height + 5) {
-					result.y = n.y;
-				}
-				
-			}*/ 
+
 		}
 		return result;
 	}
 	
-	public void iterate() {
+	public void iterate(int t) {
 		for (Node n : mNodes) {
 			n.setLocation(atBorder(n));
-			Point2D.Double a = forceTo(n);
+			Point2D.Double a = forceTo(n,t);
 			n.v.x *= REDUCE;
 			n.v.y *= REDUCE;
 			n.v.x += a.x * DT;

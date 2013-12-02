@@ -4,7 +4,7 @@ import java.awt.geom.Point2D;
 
 public class Node extends Point2D.Double {
 	
-	public double coverage = 5;
+	public double coverage = 80;
 	public Point2D.Double v;
 	
 	public Node (double x, double y) {
